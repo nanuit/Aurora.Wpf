@@ -12,7 +12,7 @@
 		<Description>wpf controls enhancements</Description>
 		<Copyright>Nanuit(c) 2022</Copyright>
 		<PackageIcon>nuget.png</PackageIcon>
-		<PackageReleaseNotes>Added .net5 and .net6 support</PackageReleaseNotes>
+		<PackageReleaseNotes>projectfile converted to VS2022</PackageReleaseNotes>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 	</PropertyGroup>
 
