@@ -12,7 +12,7 @@ namespace Aurora.Wpf
         #region Fields
         private readonly Action<object>? m_Execute;
         private readonly Predicate<object>? m_CanExecute;
-        #endregion // Fields 
+        #endregion 
         #region Constructors
 
         /// <summary>
@@ -39,6 +39,9 @@ namespace Aurora.Wpf
             bool retVal = m_CanExecute?.Invoke(parameter!) ?? true;
             return retVal;
         }
+        /// <summary>
+        /// handle event when CanExecute is changed
+        /// </summary>
         public event EventHandler? CanExecuteChanged
         {
             add => CommandManager.RequerySuggested += value;
