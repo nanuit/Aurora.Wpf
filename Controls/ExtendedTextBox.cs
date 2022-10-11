@@ -5,10 +5,15 @@ using System.Windows.Input;
 
 namespace Aurora.Wpf.Controls
 {
+    /// <summary>
+    /// Extended TextBox Control to add mouse wheel zoom functionality
+    /// </summary>
     public class ExtendedTextBox :TextBox
     {
         #region To Life and Die in Starlight
-
+        /// <summary>
+        /// register mouse wheel event
+        /// </summary>
         public ExtendedTextBox()
         {
             PreviewMouseWheel += OnMouseWheel;
@@ -18,7 +23,6 @@ namespace Aurora.Wpf.Controls
         #region MouseWheelZoom
         private void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-
             if (Keyboard.Modifiers != ModifierKeys.Control)
                 return;
 
@@ -33,8 +37,14 @@ namespace Aurora.Wpf.Controls
             }
 
         }
+        /// <summary>
+        /// Dependecncy property to enable XAML element
+        /// </summary>
         public static readonly DependencyProperty MouseWheelFontZoomProperty =
-            DependencyProperty.Register("MouseWheelFontZoom", typeof(bool), typeof(ExtendedTextBox), new UIPropertyMetadata(false));
+            DependencyProperty.Register(nameof(MouseWheelFontZoom), typeof(bool), typeof(ExtendedTextBox), new UIPropertyMetadata(false));
+        /// <summary>
+        /// Property controlling the active state of the mouse wheel zoom
+        /// </summary>
         public bool MouseWheelFontZoom
         {
             get => (bool)GetValue(MouseWheelFontZoomProperty);

@@ -1,26 +1,34 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Markup;
 
 namespace Aurora.Wpf
 {
+    /// <summary>
+    /// enumeration extension to use the enumeration to within XMAL
+    /// </summary>
     public class EnumerationExtension : MarkupExtension
     {
-        private Type m_EnumType;
-
-
-        public EnumerationExtension(Type enumType)
+        private Type? m_EnumType;
+        /// <summary>
+        /// instantiate the class for the given enum type
+        /// </summary>
+        /// <param name="enumType">type of the enum</param>
+        /// <exception cref="ArgumentNullException">enumType cannot be null</exception>
+        public EnumerationExtension(Type? enumType)
         {
-            if (enumType == null)
-                throw new ArgumentNullException("enumType");
-
-            EnumType = enumType;
+            EnumType = enumType ?? throw new ArgumentNullException(nameof(enumType));
         }
 
-        public Type EnumType
+        /// <summary>
+        /// property to acces the EnumType to handle 
+        /// </summary>
+        /// <exception cref="ArgumentException">the underlying type of the specified type must be a enum type</exception>
+        public Type? EnumType
         {
-            get { return m_EnumType; }
+            get => m_EnumType;
             private set
             {
                 if (m_EnumType == value)
@@ -35,8 +43,14 @@ namespace Aurora.Wpf
             }
         }
 
+        /// <summary>
+        /// Provide the value of the enum for the XAML service provider
+        /// </summary>
+        /// <param name="serviceProvider">Provider to handle the assignment to XAML elements</param>
+        /// <returns></returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
+            Debug.Assert(EnumType != null, nameof(EnumType) + " != null");
             var enumValues = Enum.GetValues(EnumType);
 
             return (
@@ -44,27 +58,34 @@ namespace Aurora.Wpf
                 select new EnumerationMember
                 {
                     Value = enumValue,
-                    Description = GetDescription(enumValue)
+                    Description = GetDescription(enumValue) ?? string.Empty
                 }).ToArray();
         }
 
-        private string GetDescription(object enumValue)
+        private string? GetDescription(object enumValue)
         {
-            var descriptionAttribute = EnumType
-                .GetField(enumValue.ToString())
-                .GetCustomAttributes(typeof(DescriptionAttribute), false)
-                .FirstOrDefault() as DescriptionAttribute;
-
-
-            return descriptionAttribute != null
+            if (enumValue == null)
+                throw new ArgumentNullException(nameof(enumValue));
+            var fieldInfo = EnumType.GetField(enumValue.ToString()!);
+            string? retVal = fieldInfo?.GetCustomAttributes(typeof(DescriptionAttribute), false).FirstOrDefault() is DescriptionAttribute descriptionAttribute
                 ? descriptionAttribute.Description
                 : enumValue.ToString();
+            return retVal;
         }
 
+        /// <summary>
+        /// class to describe a EnumerationMember
+        /// </summary>
         public class EnumerationMember
         {
-            public string Description { get; set; }
-            public object Value { get; set; }
+            /// <summary>
+            /// description for the enum member
+            /// </summary>
+            public string Description { get; set; } = string.Empty;
+            /// <summary>
+            /// value of the enum member
+            /// </summary>
+            public object Value { get; set; } = string.Empty;
         }
     }
 }

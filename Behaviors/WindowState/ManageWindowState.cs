@@ -1,80 +1,115 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Interactivity;
+
 using Aurora.Configs;
+#if NET48
+using System.Windows.Interactivity;
+#else
+using Microsoft.Xaml.Behaviors;
+#endif
 
 
-namespace Aurora.Wpf.Behaviours.WindowState
+namespace Aurora.Wpf.Behaviors.WindowState
 {
+    /// <summary>
+    /// Class to store and recover the window state of a wpf window to and from a jsonfile in the userprofile
+    /// </summary>
     public class ManagePositions : Behavior<Window>
     {
         #region Private Members
-        private StoredWindowState m_State;
-        private ConfigJson<StoredWindowState> m_Config;
+        private StoredWindowState? m_State;
+        private ConfigJson<StoredWindowState>? m_Config;
         #endregion
+        /// <summary>
+        /// XAML Property to set the activation state of the behavior
+        /// </summary>
         public static readonly DependencyProperty ActivatedProperty =
             DependencyProperty.Register(
-                "Activated",
+                nameof(Activated),
                 typeof(bool),
                 typeof(ManagePositions),
                 new PropertyMetadata(OnActivatedChanged)
             );
-
+        /// <summary>
+        /// XAML Property to set the context. it determines the json file name
+        /// </summary>
         public static readonly DependencyProperty ContextProperty =
             DependencyProperty.Register(
-                "Context",
+                nameof(Context),
                 typeof(string),
                 typeof(ManagePositions),
                 new PropertyMetadata(OnContextChanged)
             );
         #region Properties
+        /// <summary>
+        /// Indicator if the behavior is active
+        /// </summary>
         public bool Activated
         {
             get => (bool)GetValue(ActivatedProperty);
             set => SetValue(ActivatedProperty, value);
             
         }
+        /// <summary>
+        /// Cóntext name 
+        /// </summary>
         public string Context
         {
             get => GetValue(ContextProperty).ToString();
             set => SetValue(ActivatedProperty, value);
-
         }
 
         #endregion
         #region Protected Methods
-        static void OnActivatedChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+
+        /// <summary>
+        /// event method for Activated Property change
+        /// </summary>
+        /// <param name="dependencyObject"></param>
+        /// <param name="e"></param>
+        protected static void OnActivatedChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             
         }
-        static void OnContextChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        /// <summary>
+        /// event method for Context Property change
+        /// </summary>
+        /// <param name="dependencyObject"></param>
+        /// <param name="e"></param>
+        protected static void OnContextChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {   
         }
+        /// <summary>
+        /// event method when the behavior is attached to a window
+        /// </summary>
         protected override void OnAttached()
         {
             AssociatedObject.Closing += OnClosing;
             InitConfig();
             SetState();
         }
-       
+        /// <summary>
+        /// event method when the behavior is detached from a window
+        /// </summary>
         protected override void OnDetaching()
         {
             AssociatedObject.Closing -= OnClosing;
         }
 
-        void OnClosing(object sender, EventArgs eventArgs)
+        private void OnClosing(object sender, EventArgs eventArgs)
         {
             if (!Activated)
                 return;
             InitConfig();
-
+            if (m_State == null)
+                return;
             m_State.Height = Math.Round(AssociatedObject.Height);
             m_State.Width = Math.Round(AssociatedObject.Width);
             m_State.Top = Math.Round(AssociatedObject.Top);
             m_State.Left = Math.Round(AssociatedObject.Left);
             m_State.State = AssociatedObject.WindowState;
             m_State.Stored = true;
-            m_Config.Save();
+            m_Config?.Save();
         }
 
         #endregion
@@ -82,10 +117,8 @@ namespace Aurora.Wpf.Behaviours.WindowState
         {
             if (!Activated)
                 return;
-            if (m_Config == null)
-                m_Config = new ConfigJson<StoredWindowState>(ConfigType.LocalProfile, string.IsNullOrEmpty(Context) ? "WindowState" : Context, AssociatedObject.Title);
-            if (m_State == null)
-                m_State = m_Config.Load();
+            m_Config ??= new ConfigJson<StoredWindowState>(ConfigType.LocalProfile, string.IsNullOrEmpty(Context) ? "WindowState" : Context, AssociatedObject.Title);
+            m_State ??= m_Config.Load();
         }
 
         private void SetState()

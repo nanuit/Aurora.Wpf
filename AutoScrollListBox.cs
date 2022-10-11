@@ -4,21 +4,32 @@ using System.Windows.Controls;
 
 namespace Aurora.Wpf
 {
+    /// <summary>
+    /// Add auto scroll functionality to the Listbox Control
+    /// </summary>
     public class AutoScrollListBox : ListBox
     {
-        // Using a DependencyProperty as the backing store for AutoScoll.  This enables animation, styling, binding, etc...
+        /// <summary>
+        /// XAML Property to activate Auto scroll
+        /// </summary>
         public static readonly DependencyProperty AutoScrollProperty =
-            DependencyProperty.Register("AutoScroll", typeof (bool), typeof (AutoScrollListBox), new UIPropertyMetadata(default(bool), OnAutoScrollChanged));
-
+            DependencyProperty.Register(nameof(AutoScroll), typeof (bool), typeof (AutoScrollListBox), new UIPropertyMetadata(default(bool), OnAutoScrollChanged));
+        /// <summary>
+        /// activate the auto scroll feature
+        /// </summary>
         public bool AutoScroll
         {
             get => (bool)GetValue(AutoScrollProperty);
             set => SetValue(AutoScrollProperty, value);
         }
-
-        public static void OnAutoScrollChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        /// <summary>
+        /// handling a change of the autoScroll property
+        /// </summary>
+        /// <param name="dependecyObject"></param>
+        /// <param name="e"></param>
+        public static void OnAutoScrollChanged(DependencyObject dependecyObject, DependencyPropertyChangedEventArgs e)
         {
-            AutoScrollListBox thisLb = (AutoScrollListBox) s;
+            AutoScrollListBox thisLb = (AutoScrollListBox) dependecyObject;
             bool newValue = (bool)e.NewValue;
             bool oldValue = (bool)e.OldValue;
             INotifyCollectionChanged notifyCollection = thisLb.Items as INotifyCollectionChanged;

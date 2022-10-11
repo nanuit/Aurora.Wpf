@@ -137,7 +137,7 @@ namespace Aurora.Wpf
 
         private MenuItem m_CopyLinesMenu;
         private MenuItem m_CopyCellsMenu;
-        private string m_ContextMenuSelectedColumn;
+        private string? m_ContextMenuSelectedColumn;
         #endregion
         #region To life and Die in Starlight
 
@@ -229,19 +229,19 @@ namespace Aurora.Wpf
         protected override void OnMouseRightButtonUp(MouseButtonEventArgs e)
         {
             m_ContextMenuSelectedColumn = CurrentCell.Column?.SortMemberPath ?? null;
-            DependencyObject dep = (DependencyObject)e.OriginalSource;
-            while ((dep != null) && !(dep is DataGridCell) && !(dep is DataGridColumnHeader))
+            DependencyObject? dep = (DependencyObject?)e.OriginalSource;
+            while ((dep != null) && dep is not DataGridCell && dep is not DataGridColumnHeader)
             {
                 dep = VisualTreeHelper.GetParent(dep);
             }
 
-            if (dep is DataGridCell)
+            if (dep is DataGridCell cell)
             {
-                m_ContextMenuSelectedColumn = ((DataGridCell)dep).Column?.SortMemberPath ?? null;
+                m_ContextMenuSelectedColumn = cell.Column?.SortMemberPath ?? null;
             }
-            if (dep is DataGridColumnHeader)
+            if (dep is DataGridColumnHeader header)
             {
-                m_ContextMenuSelectedColumn = ((DataGridColumnHeader)dep).Column?.SortMemberPath ?? null;
+                m_ContextMenuSelectedColumn = header.Column?.SortMemberPath ?? null;
             }
             base.OnMouseRightButtonDown(e);
         }

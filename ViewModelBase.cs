@@ -1,31 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Wpf
 {
+    /// <summary>
+    /// Base class for view models implementing the INotifyPropertyChanged Interface
+    /// </summary>
     public class ViewModelBase : INotifyPropertyChanged
     {
         #region INotifyPropertyChange
-        public event PropertyChangedEventHandler PropertyChanged;
-        
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public event PropertyChangedEventHandler? PropertyChanged;
+        /// <summary>
+        /// Eventmethod to invoke a property change
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+        /// <summary>
+        /// Verify that the property name matches a real, public, instance property on this object. 
+        /// </summary>
+        /// <param name="propertyName"></param>
         [Conditional("DEBUG")]
         [DebuggerStepThrough]
         public void VerifyPropertyName(string propertyName)
         {
-            // Verify that the property name matches a real, 
-            // public, instance property on this object. 
+            
             if (TypeDescriptor.GetProperties(this)[propertyName] == null)
             {
                 string msg = "Invalid property name: " + propertyName;
@@ -35,7 +38,5 @@ namespace Aurora.Wpf
                     Debug.Fail(msg);
             }
         }
-
-
     }
 }

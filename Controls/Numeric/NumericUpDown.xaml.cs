@@ -37,7 +37,9 @@ namespace Aurora.Wpf.Controls.Numeric
     {
         private readonly Regex m_NumMatch;
 
-        /// <summary>Initializes a new instance of the NumericBoxControlLib.NumericBox class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the NumericBoxControlLib.NumericBox class.
+        /// </summary>
         public NumericUpDown()
         {
             InitializeComponent();
@@ -93,10 +95,10 @@ namespace Aurora.Wpf.Controls.Numeric
                 RaiseEvent(new RoutedEventArgs(DecreaseClickedEvent));
             }
         }
-
-        /// <summary>The Value property represents the TextBoxValue of the control.</summary>
-        /// <returns>The current TextBoxValue of the control</returns>      
-
+        /// <summary>
+        /// The Value property represents the TextBoxValue of the control.
+        /// </summary>
+        /// <returns>The current TextBoxValue of the control</returns>   
         public int Value
         {
             get => (int)GetValue(ValueProperty);

@@ -7,8 +7,14 @@ using System.Windows.Media.Animation;
 
 namespace Aurora.Wpf.Controls
 {
+    /// <summary>
+    /// Class to enable mouse wheel zoom on a UserControl
+    /// </summary>
     public class ZoomUserControl : UserControl
     {
+        /// <summary>
+        /// register for mouse wheel event
+        /// </summary>
         protected ZoomUserControl()
         {
             PreviewMouseWheel += OnMouseWheel;
@@ -16,7 +22,6 @@ namespace Aurora.Wpf.Controls
         private float m_ScaleFactor = 1.0f;
         private void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
-
             if (Keyboard.Modifiers != ModifierKeys.Control)
                 return;
 
@@ -28,7 +33,7 @@ namespace Aurora.Wpf.Controls
 
             // We'll need a DoubleAnimation object to drive
             // the ScaleX and ScaleY properties.
-            if (Mode)
+            if (MouseWheelFontZoom)
             {
                 DoubleAnimation animator = new DoubleAnimation()
                 {
@@ -49,16 +54,17 @@ namespace Aurora.Wpf.Controls
                     FontSize ++;
                 else
                     FontSize = Math.Max(FontSize - 1, 1);
-
             }
         }
-        public static readonly DependencyProperty ModeProperty =
-            DependencyProperty.Register("Mode", typeof(bool), typeof(ZoomUserControl), new UIPropertyMetadata(false));
-        public bool Mode
+        public static readonly DependencyProperty MouseWheelFontZoomProperty =
+            DependencyProperty.Register(nameof(MouseWheelFontZoom), typeof(bool), typeof(ZoomUserControl), new UIPropertyMetadata(false));
+        /// <summary>
+        /// Property controlling the active state of the mouse wheel zoom
+        /// </summary>
+        public bool MouseWheelFontZoom
         {
-            get => (bool)GetValue(ModeProperty);
-            set => SetValue(ModeProperty, value);
+            get => (bool)GetValue(MouseWheelFontZoomProperty);
+            set => SetValue(MouseWheelFontZoomProperty, value);
         }
-
     }
 }
