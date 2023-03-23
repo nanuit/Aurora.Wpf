@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Aurora.Wpf
+namespace Aurora.Wpf.Controls
 {
     /// <summary>
     /// Add auto scroll functionality to the Listbox Control
@@ -13,7 +13,7 @@ namespace Aurora.Wpf
         /// XAML Property to activate Auto scroll
         /// </summary>
         public static readonly DependencyProperty AutoScrollProperty =
-            DependencyProperty.Register(nameof(AutoScroll), typeof (bool), typeof (AutoScrollListBox), new UIPropertyMetadata(default(bool), OnAutoScrollChanged));
+            DependencyProperty.Register(nameof(AutoScroll), typeof(bool), typeof(AutoScrollListBox), new UIPropertyMetadata(default(bool), OnAutoScrollChanged));
         /// <summary>
         /// activate the auto scroll feature
         /// </summary>
@@ -29,7 +29,7 @@ namespace Aurora.Wpf
         /// <param name="e"></param>
         public static void OnAutoScrollChanged(DependencyObject dependecyObject, DependencyPropertyChangedEventArgs e)
         {
-            AutoScrollListBox thisLb = (AutoScrollListBox) dependecyObject;
+            AutoScrollListBox thisLb = (AutoScrollListBox)dependecyObject;
             bool newValue = (bool)e.NewValue;
             bool oldValue = (bool)e.OldValue;
             INotifyCollectionChanged notifyCollection = thisLb.Items as INotifyCollectionChanged;
@@ -37,7 +37,7 @@ namespace Aurora.Wpf
             // Add the event handler in case that the property is set to true
             if (newValue && !oldValue)
                 notifyCollection.CollectionChanged += thisLb.notifyCollection_CollectionChanged;
-            
+
             // Remove the event handle in case the property is set to false
             if (!newValue && oldValue)
                 notifyCollection.CollectionChanged -= thisLb.notifyCollection_CollectionChanged;
@@ -49,7 +49,7 @@ namespace Aurora.Wpf
             //Scroll into the last item
             if (itemCollection?.Count > 1)
             {
-                this.ScrollIntoView(itemCollection[itemCollection.Count - 1]);
+                ScrollIntoView(itemCollection[itemCollection.Count - 1]);
                 UnselectAll();
             }
         }

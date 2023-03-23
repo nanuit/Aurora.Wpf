@@ -38,7 +38,7 @@ namespace Aurora.Wpf.Controls
 
         }
         /// <summary>
-        /// Dependecncy property to enable XAML element
+        /// Dependency property to enable XAML element
         /// </summary>
         public static readonly DependencyProperty MouseWheelFontZoomProperty =
             DependencyProperty.Register(nameof(MouseWheelFontZoom), typeof(bool), typeof(ExtendedTextBox), new UIPropertyMetadata(false));
