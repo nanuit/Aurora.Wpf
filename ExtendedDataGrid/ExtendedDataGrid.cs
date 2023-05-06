@@ -21,7 +21,7 @@ namespace Aurora.Wpf
     /// - <see cref="MouseWheelFontZoom"/> property to enable zoom via ctrl+mouse wheel
     /// 
     /// </summary>
-    public class ExtendedDataGrid : DataGrid
+    public partial class ExtendedDataGrid : DataGrid
     {
         #region LastColumnExpand
         /// <summary>
