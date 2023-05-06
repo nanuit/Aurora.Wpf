@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Data;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using ServiceStack;
 
 namespace Aurora.Wpf
 {
@@ -101,7 +103,7 @@ namespace Aurora.Wpf
         /// XAML Property to activate the copy lines contextmenu
         /// </summary>
         public static readonly DependencyProperty CopyLinesMenuProperty =
-            DependencyProperty.Register(nameof(CopyLinesMenu), typeof(bool), typeof(ExtendedDataGrid), new UIPropertyMetadata(default(bool), OnCopyLinesMenuChanged));
+            DependencyProperty.Register(nameof(CopyLinesMenu), typeof(bool), typeof(ExtendedDataGrid), new UIPropertyMetadata(default(bool), OnCopyMenusChanged));
 
         /// <summary>
         /// controls if the CopyLines context menu should be enablesd
@@ -115,7 +117,7 @@ namespace Aurora.Wpf
         /// XAML Property to activate the copy cells contextmenu
         /// </summary>
         public static readonly DependencyProperty CopyCellsMenuProperty =
-            DependencyProperty.Register(nameof(CopyCellsMenu), typeof(bool), typeof(ExtendedDataGrid), new UIPropertyMetadata(default(bool), OnCopyLinesMenuChanged));
+            DependencyProperty.Register(nameof(CopyCellsMenu), typeof(bool), typeof(ExtendedDataGrid), new UIPropertyMetadata(default(bool), OnCopyMenusChanged));
 
         /// <summary>
         /// controls if the CopyCells context menu should be enablesd
@@ -126,7 +128,7 @@ namespace Aurora.Wpf
             set { if (value != CopyCellsMenu) SetValue(CopyCellsMenuProperty, value); }
         }
 
-        private static void OnCopyLinesMenuChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
+        private static void OnCopyMenusChanged(DependencyObject s, DependencyPropertyChangedEventArgs e)
         {
             ExtendedDataGrid dataGrid = (ExtendedDataGrid)s;
             if (e.NewValue == e.OldValue)
@@ -145,11 +147,23 @@ namespace Aurora.Wpf
             string clipBoardText = string.Empty;
             foreach (var line in SelectedItems)
             {
-                PropertyInfo propInfo = line.GetType().GetProperty(m_ContextMenuSelectedColumn, BindingFlags.Public | BindingFlags.Instance);
-                if (propInfo != null)
-                    clipBoardText += propInfo.GetValue(line) + Environment.NewLine;
+                if (line is DataRowView dataRowView)
+                {
+                    if (dataRowView.DataView.Table != null)
+                    {
+                        int columnIndex = dataRowView.DataView.Table.Columns.IndexOf(m_ContextMenuSelectedColumn);
+                        clipBoardText += dataRowView[columnIndex] + Environment.NewLine;
+                    }
+                }
+                else
+                {
+                    PropertyInfo propInfo = line.GetType().GetProperty(m_ContextMenuSelectedColumn, BindingFlags.Public | BindingFlags.Instance);
+                    if (propInfo != null)
+                        clipBoardText += propInfo.GetValue(line) + Environment.NewLine;
+                }
+                
             }
-            Clipboard.SetText(clipBoardText);
+            Clipboard.SetDataObject(clipBoardText);
         }
 
         /// <summary>
