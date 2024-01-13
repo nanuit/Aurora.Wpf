@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net48;net6.0-windows;net7.0-windows</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows;net7.0-windows;net48;net8.0-windows</TargetFrameworks>
 		<AssemblyName>Aurora.Wpf</AssemblyName>
 		<RootNamespace>Aurora.Wpf</RootNamespace>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -17,7 +17,12 @@
 		<PackageIcon>nuget.png</PackageIcon>
 		<PackageReleaseNotes>BoolToStringConverter added, net7.0 support added</PackageReleaseNotes>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <LangVersion>9.0</LangVersion>
+        <LangVersion>latestmajor</LangVersion>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+		<DebugType>None</DebugType>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Include="nuget.png">
