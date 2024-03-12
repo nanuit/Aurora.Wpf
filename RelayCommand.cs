@@ -55,6 +55,10 @@ namespace Aurora.Wpf
         {
             m_Execute?.Invoke(parameter);
         }
+        public void RaiseCanExecuteChanged()
+        {
+            CommandManager.InvalidateRequerySuggested();
+        }
         #endregion 
     }
 }
